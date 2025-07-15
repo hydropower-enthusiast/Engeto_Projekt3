@@ -40,7 +40,9 @@ Pozn: Je nutné při spouštění dbát na pravidla PowerShellu:
 & - je v PowerShellu vyhrazený znak, proto je třeba jej obalit uvozovkami
 
 Příklad:
-![spusteni konecneho skriptu2](https://github.com/user-attachments/assets/fed8b0d7-16f8-4ce7-855d-12aa8fdb116e)
+
+<img width="1453" height="80" alt="obrazek" src="https://github.com/user-attachments/assets/73d13fef-0a05-4858-a48d-e6500945522b" />
+
 
 Dále je nutné zadat webovou stránku a název ve správném pořadí. Webová stránka musí odkazovat na jeden z vybraných územních celků.
 
