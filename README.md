@@ -41,7 +41,8 @@ Pozn: Je nutné při spouštění dbát na pravidla PowerShellu:
 
 Příklad:
 
-<img width="1453" height="80" alt="obrazek" src="https://github.com/user-attachments/assets/73d13fef-0a05-4858-a48d-e6500945522b" />
+<img width="1463" height="78" alt="obrazek" src="https://github.com/user-attachments/assets/8587cb77-b8b5-46c8-8f35-a3a2f2d2b38f" />
+
 
 
 Dále je nutné zadat webovou stránku a název ve správném pořadí. Webová stránka musí odkazovat na jeden z vybraných územních celků.
