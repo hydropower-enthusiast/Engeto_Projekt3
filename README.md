@@ -2,6 +2,7 @@
 Cílem projektu 3 je scrapovací skript, který je zaměřen na volby do poslanecké sněmovny z roku 2017 v ČR.
 Scrapování má fungovat pro kterýkoliv uzemní celek z tohoto odkazu:
 > https://www.volby.cz/pls/ps2017nss/ps3?xjazyk=CZ
+
 Výsledné data mají být zapsány ve formátu .csv
 
 ## Spouštění Skriptu
