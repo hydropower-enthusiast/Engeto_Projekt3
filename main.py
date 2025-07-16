@@ -19,20 +19,17 @@ def vyber_atributy_z_radku(
     d : int, 
     e : str, 
     f : int,
-) -> dict:
-    
+) -> dict:    
     """
-    Funkce ktera vytvori a vraci slovnik hledanych dat.
-    """
-    
+    Vytvori a vrati slovnik obsahujici hledana specifikovana data.
+    """    
     return {a:td_tag[b].getText(), c:td_tag[d].getText(), e:td_tag[f].getText()}
 
 def scraper(
     url : str,
 ):
     """
-    Funkce zajistujici scrapovani dat. Vyuziva knihoven requests a bs4.
-    
+    Zajistuje scrapovani dat ze zadane url.
     """
     odp_serveru = get(url)
     odp_serveru.encoding='UTF-8'
@@ -53,7 +50,10 @@ def zisk_hodnot(
     h : int or NoneType,
     i : int or NoneType,
 ) -> list:
-    
+    """
+    Na zaklade zadanych parametru vyscrapuje z tabulek
+    hledane tagy a hodnoty, ktere nasledne zapise do listu a vrati.
+    """
     vysledky = []
     for table in soup.find_all(my_tag, my_att, limit = i):
         vsechny_tr = table.find_all("tr")
@@ -70,15 +70,12 @@ def list_of_webpages(
     a : str, 
     b : str, 
     c : str
-) -> list:
-    
+) -> list:    
     """
-    Kontrola, zda uzivatel zadal platnou webovou stranku.
     Nejprve scrapne vsechny odkazy ze zadane webove stranky, 
-    nasledne vytridi dle vyuzitelnosti a vraci list pouzitelnych webovych
+    nasledne vytridi dle parametru a vraci list pouzitelnych webovych
     stranek.
-    """
-   
+    """   
     # Vyhledani vsech linku/odkazu na dane strance
     link_list = [i['href'] for i in soup.find_all('a', href=True)]
     list_dovolenych_stranek = []
@@ -86,32 +83,34 @@ def list_of_webpages(
     for each in link_list:
         if a and b in each or c in each:
             each="https://www.volby.cz/pls/ps2017nss/"+each
-            list_dovolenych_stranek.append(each)
+            if each not in list_dovolenych_stranek:
+                list_dovolenych_stranek.append(each)
+            else:
+                pass
     # Returnuje list vsech dovolenych linku.
     return list_dovolenych_stranek
 
 def main_function(
     url : str,
     zahranici : bool,
-) -> dict:
-    
+) -> dict:    
     """
-    Specificka funkce definovana pouze pro zahranici, jelikoz toto ma jako
-    jedine rozdilny zapis webove stranky.
-    Proto jsou rovnez nektere casti zprogramovany rozdilne a je vyuzito
-    rozdilnych principu a postupu. Take zde neni tolik dbano na 
-    rozdeleni do jednotlivych mensich funkci a spise je zde snaha o komplexni
-    pristup.
-    """
-    
+    Zajistuje ziskani hledanych dat a nasledny zapis do slovniku konecnych 
+    dat.
+    """    
+    # Scrape dat uzemniho celku
     soup = scraper(url)
     
+    # Povolene webove stranky obsahuji nasledujici parametry v odkazech:
     w = "xjazyk=CZ&xkraj=2&xobec=999997"
     x = "xokrsek"
     y = "xvyber"
     
+    # Seznam url ktere vyhovuji parametrum vyse. 
     seznam_url = list_of_webpages(soup,w,x,y)
 
+    # Parametry pro funkci ziskavajici data o okrscich/obcich v konkretnim
+    # uzemnim celku.
     my_tag = "table"
     my_att = {"class":"table"}
     
@@ -144,16 +143,20 @@ def main_function(
         i = None   
     
     okrsek_obec = a
-    vysledky_uz_celek = zisk_hodnot(soup, my_tag, my_att, 
+    vysledky_uzemni_celek = zisk_hodnot(soup, my_tag, my_att, 
                                     a, b, c, d, e, f, g, h, i)
 
     slovnik_konecnych_dat = {} 
-    for i in range(0, len(vysledky_uz_celek)):
-            each = vysledky_uz_celek[i]
+    for i in range(0, len(vysledky_uzemni_celek)):
+            each = vysledky_uzemni_celek[i]
 
+            # Scrapovani dat pro kazdou obec/okrsek v uzemnim celku.
             url = seznam_url[i]
             soup = scraper(url)
             
+            # Parametry se lisi v zavislosti na tom, zda se jedna o uzemni 
+            # celek v CR, ci zda se jedna o Zahranici, ktere ma jinak
+            # formatovanou webovou stranku.
             if zahranici:
                 my_tag = "table"
                 my_att = {"class":"table"}
@@ -208,20 +211,24 @@ def main_function(
             if not zahranici:
                 vysledky_region_2 = vysledky_region_2[1:]
 
-            # Pozn: try/except - Index Error je řešen, jelikož 
-            # ne všechny územní celky mají v tabulkách na webové stránce
-            # všechny řádky obsazené. 
-            try:
-                y=[vysledky_region_1, vysledky_region_2]            
+
+
+            y=[vysledky_region_1, vysledky_region_2]
+            # Zapis do slovniku konecnych dat. 
+            try:            
                 slovnik_konecnych_dat[each[okrsek_obec]] = {"Location":each["název"],
                                   "Registered":y[0][0]["registrovanych"],
                                   "Envelopes":y[0][0]["obalky"],
                                   "Valid":y[0][0]["platnych"]}
-    
+            
+                # Zapis vysledku jednotlivych politickych stran
+                # Pozn: try/except - Index Error je řešen, jelikož 
+                # ne všechny územní celky mají v tabulkách na webové stránce
+                # všechny řádky obsazené. 
+                # try:
                 for iterator in range(0,len(y[1])):
                     (slovnik_konecnych_dat[each[okrsek_obec]][y[1][iterator]
                         ["nazev_strany"]]) = y[1][iterator]["pocet_hlasu"]
-
             except IndexError:
                 pass
 
@@ -230,16 +237,14 @@ def main_function(
 def csv_zapisovac(
     slovnik_konecnych_dat : dict,
     file_name : str,
-):
-    
+):    
     """
-    zapisovani dat do souboru .csv
+    Zapisuje data do souboru .csv
     pouziva slovnik konecnych dat a nazev souboru zadany uzivatelem.
-    Je pouzit delimiter ; a encoding windows-1250, jelikož obsahuje 
-    českou abecedu. 
-    Mezera mezi tisíci a stovkami není řešena, dá se řešit snadno v excelu.
-    """    
-    
+    Je pouzit delimiter ; a encoding windows-1250, jelikoz obsahuje 
+    ceskou abecedu. 
+    Mezera mezi tisici a stovkami neni resena, da se resit snadno v excelu.
+    """        
     hlavicka_helper = list(slovnik_konecnych_dat.keys())
     hlavicka = list(slovnik_konecnych_dat[hlavicka_helper[0]].keys())
     hlavicka.insert(0, "Code")
@@ -257,14 +262,10 @@ def csv_zapisovac(
 
 
 def basic_function(url, file_name):
-
     """
-    Zakladni funkce kontrolujici, zda byly zadany spravne parametry
-    a ve spravnem poradi.
-    Pokud ano, spusti script.
-    Pokud ne, ukonci jej.
+    Ramcova funkce, ktera kontroluje uzivateluv input a pri spravnem zadani
+    zajistuje prubeh skriptu.
     """
-
     # Fixni url obsahujici seznamy na jednotlive uzemni celky
     fixni_url = "https://www.volby.cz/pls/ps2017nss/ps3?xjazyk=CZ"
     soup = scraper(fixni_url)
@@ -282,12 +283,10 @@ def basic_function(url, file_name):
         print("incorrect webpage adress")
         sys.exit()
     # Uzemni celek Zahranici ma jako jediny odlisnou webovou strukturu
-    # a proto ma sve vlastni reseni.
+    # a proto ma rozdilne parametry.
     elif url == "https://www.volby.cz/pls/ps2017nss/ps36?xjazyk=CZ":
         slovnik_konecnych_dat = main_function(url, zahranici = True)
 
-    # Vsechny ostatni uzemni celky jsou zpracovavany trochu jinym zpusobem, 
-    # finalni vygenerovany slovnik ma vsak v obou pripadech stejnou strukturu.
     else:
         slovnik_konecnych_dat = main_function(url, zahranici = False)
     
