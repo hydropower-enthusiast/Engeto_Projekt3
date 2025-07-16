@@ -44,11 +44,14 @@ kde nazev_prostredi, webova_stranka a nazev_csv.csv jsou zavislé dle pojmenová
 Pozn: Je nutné při spouštění dbát na pravidla PowerShellu:
 & - je v PowerShellu vyhrazený znak, proto je třeba jej obalit uvozovkami
 
-Příklad:
-
-<img width="1463" height="78" alt="obrazek" src="https://github.com/user-attachments/assets/8587cb77-b8b5-46c8-8f35-a3a2f2d2b38f" />
-
 Dále je nutné zadat webovou stránku a název ve správném pořadí. Webová stránka musí odkazovat na jeden z vybraných územních celků.
+
+Příklad v PowerShell ukazující aktivaci prostředí a spuštění skriptu pro Jeseník a pak pro zahraničí:
+
+<img width="1465" height="323" alt="aktivace_a_spusteni_skriptu" src="https://github.com/user-attachments/assets/11cb2bb1-1e0e-49cc-aa3b-c15a5a4412b0" />
+
+
+
 
 
 
