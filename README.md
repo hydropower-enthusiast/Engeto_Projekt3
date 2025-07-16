@@ -6,9 +6,14 @@ Scrapování má fungovat pro kterýkoliv uzemní celek z tohoto odkazu:
 
 Výsledné data mají být zapsány ve formátu .csv
 
-Ukázka výsledku:
+Ukázka výsledku - Jeseník:
 
-<img width="1639" height="472" alt="obrazek" src="https://github.com/user-attachments/assets/684498ba-41d2-4fd2-a33c-8850e19ffdda" />
+<img width="1770" height="454" alt="obrazek" src="https://github.com/user-attachments/assets/6c5a5107-0c1f-485f-a668-b66ccb013533" />
+
+
+Ukázka výsledku - Zahraničí:
+
+<img width="1816" height="451" alt="obrazek" src="https://github.com/user-attachments/assets/8cce250a-41c9-4154-8685-f1919fbbbe10" />
 
 
 ## Spouštění Skriptu
@@ -42,8 +47,6 @@ Pozn: Je nutné při spouštění dbát na pravidla PowerShellu:
 Příklad:
 
 <img width="1463" height="78" alt="obrazek" src="https://github.com/user-attachments/assets/8587cb77-b8b5-46c8-8f35-a3a2f2d2b38f" />
-
-
 
 Dále je nutné zadat webovou stránku a název ve správném pořadí. Webová stránka musí odkazovat na jeden z vybraných územních celků.
 
